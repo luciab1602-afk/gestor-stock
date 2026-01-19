@@ -83,73 +83,7 @@ def calcular_stock_total(productos):
         total += p["kg_abiertos"]
 
     return total
-
-
-# ---------------- PROGRAMA PRINCIPAL ----------------
-
-productos = cargar_productos("alimentos.csv")
-
-while True:
-    print("\n===== GESTOR DE STOCK =====")
-    print("1 - Mostrar productos")
-    print("2 - Ver stock total (kg)")
-    print("3 - Descontar stock")
-    print("4 - Salir")
-    opcion = input("Elegí una opción: ")
-
-    if opcion == "1":
-        mostrar_productos(productos)
-
-    elif opcion == "2":
-        total = calcular_stock_total(productos)
-        print(f"\nStock total disponible: {total:.2f} kg")
-
-    elif opcion == "3":
-        nombre_buscar = input("Ingresá el nombre del producto a descontar: ").strip().lower()
-        encontrado = False
-
-        for p in productos:
-            if nombre_buscar in p["prodnombre"].lower():
-                encontrado = True
-                print(f"Producto encontrado: {p['prodnombre']}")
-                print(f"Stock actual: {p['kg_por_bolsa'] * p['bolsas_cerradas'] + p['kg_abiertos']:.2f} kg")
-
-                kg_a_descontar = a_float(input("Ingresá la cantidad de kg a descontar: "))
-                stock_actual = p["kg_por_bolsa"] * p["bolsas_cerradas"] + p["kg_abiertos"]
-
-                if kg_a_descontar > stock_actual:
-                    print("No hay suficiente stock para descontar esa cantidad.")
-                else:
-                    # Descontar de kg abiertos primero
-                    if kg_a_descontar <= p["kg_abiertos"]:
-                        p["kg_abiertos"] -= kg_a_descontar
-                    else:
-                        kg_a_descontar -= p["kg_abiertos"]
-                        p["kg_abiertos"] = 0.0
-
-                        # Descontar de bolsas cerradas
-                        bolsas_a_descontar = int(kg_a_descontar // p["kg_por_bolsa"])
-                        kg_restante = kg_a_descontar % p["kg_por_bolsa"]
-
-                        if bolsas_a_descontar > p["bolsas_cerradas"]:
-                            bolsas_a_descontar = p["bolsas_cerradas"]
-                            kg_restante = 0.0
-
-                        p["bolsas_cerradas"] -= bolsas_a_descontar
-                        p["kg_abiertos"] -= kg_restante
-
-                    print("Descuento realizado con éxito.")
-                break
-
-        if not encontrado:
-            print("Producto no encontrado.")
-    elif opcion == "4":
-        print("Saliendo del sistema...")
-        break
-
-    else:
-        print("Opción inválida. Intentá de nuevo.")
-
+    
 def productos_para_tabla(productos):
     filas = []
 
