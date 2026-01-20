@@ -67,9 +67,9 @@ st.set_page_config(page_title="Gestor de Stock", layout="wide")
 st.title("📦 Gestor de Stock – Curioso")
 
 try:
-    productos = cargar_productos("productos.csv")
+    productos = cargar_productos("alimentos.csv")
 except Exception as e:
-    st.error("Error cargando productos.csv")
+    st.error("Error cargando alimentos.csv")
     st.stop()
 
 # 🔍 Buscador
@@ -133,5 +133,5 @@ for i, p in enumerate(productos_filtrados):
 
 # 💾 Guardar
 if st.button("💾 Guardar cambios"):
-    guardar_productos("productos.csv", productos)
+    guardar_productos("alimentos.csv", productos)
     st.success("Cambios guardados correctamente ✅")
