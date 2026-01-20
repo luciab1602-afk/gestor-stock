@@ -2,6 +2,16 @@ import streamlit as st
 import pandas as pd
 import csv
 import re
+if "df" not in st.session_state:
+    productos = cargar_productos("alimentos.csv")
+    tabla = productos_para_tabla(productos)
+    st.session_state.df = pd.DataFrame(tabla)
+df_editado = st.data_editor(
+    st.session_state.df,
+    num_rows="dynamic",
+    use_container_width=True
+)
+
 
 # =====================
 # FUNCIONES AUXILIARES
@@ -146,3 +156,8 @@ df_editado = st.data_editor(
         "bolsas_cerradas": st.column_config.NumberColumn("Bolsas cerradas", min_value=0, step=1),
         "kg_abiertos": st.column_config.NumberColumn("Kg abiertos", min_value=0.0, step=0.1),
     })
+st.session_state.df = df_editado
+df_editado["stock_total"] = (
+    df_editado["kg_por_bolsa"] * df_editado["bolsas_cerradas"]
+    + df_editado["kg_abiertos"]
+)
