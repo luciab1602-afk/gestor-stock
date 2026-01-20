@@ -81,7 +81,7 @@ if st.button("💾 Guardar cambios"):
 
 # Stock total
 df["stock_total"] = (
-    df["kg_por_bolsa"] * df["bolsas_cerradas"] + df["kg_abiertos"]
+    df["kg_por_bolsa"] * df["bolsas_cerradas"] - df["kg_abiertos"]
 )
 
 st.metric("📊 Stock total (kg)", f"{df['stock_total'].sum():.2f}")
