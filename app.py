@@ -88,50 +88,26 @@ st.subheader("📊 Stock actual")
 df = pd.DataFrame(productos_para_tabla(productos_filtrados))
 st.dataframe(df, use_container_width=True)
 
-# 🛠 Ajustes de stock
-st.subheader("🛠 Ajustar stock")
+# ➕ Formulario para agregar productos
+st.subheader("➕ Agregar nuevo producto")
+with st.form("form_agregar_producto"):
+    nombre = st.text_input("Nombre del producto")
+    kg_por_bolsa = st.text_input("Kg por bolsa")
+    bolsas_cerradas = st.text_input("Cantidad de bolsas cerradas")
+    kg_abiertos = st.text_input("Kg abiertos")
+    enviar = st.form_submit_button("Agregar producto")
 
-for i, p in enumerate(productos_filtrados):
-    with st.expander(p["prodnombre"]):
-        col1, col2, col3, col4, col5 = st.columns(5)
-
-        with col1:
-            if st.button("➕ Bolsa", key=f"mas_{i}"):
-                p["bolsas_cerradas"] += 1
-
-        with col2:
-            if st.button("➖ Bolsa", key=f"menos_{i}"):
-                if p["bolsas_cerradas"] > 0:
-                    p["bolsas_cerradas"] -= 1
-
-        with col3:
-            cantidad_bolsas = st.number_input(
-                "Cantidad de bolsas",
-                min_value=0,
-                step=1,
-                key=f"bolsas_{i}"
-            )
-
-        with col4:
-            if st.button("📦 Agregar bolsas cerradas", key=f"agregar_bolsas_{i}"):
-                if cantidad_bolsas > 0:
-                    p["bolsas_cerradas"] += cantidad_bolsas
-                    st.success(f"✅ {cantidad_bolsas} bolsa(s) agregada(s)")
-
-        with col5:
-            kg_vendidos = st.number_input(
-                "Kg vendidos",
-                min_value=0.0,
-                step=0.1,
-                key=f"kg_{i}"
-            )
-            if st.button("💸 Registrar venta", key=f"venta_{i}"):
-                if p["kg_abiertos"] >= kg_vendidos:
-                    p["kg_abiertos"] -= kg_vendidos
-                else:
-                    st.warning("No hay suficientes kg abiertos")
-
-# 💾 Guardar
-if st.button("💾 Guardar cambios"):
-    guardar_productos("alimentos.csv", productos)
-    st.success("Cambios guardados correctamente ✅")
+    if enviar:
+        nuevo_producto = {
+            "prodnombre": nombre,
+            "kg_por_bolsa": a_float(kg_por_bolsa),
+            "bolsas_cerradas": a_int(bolsas_cerradas),
+            "kg_abiertos": a_float(kg_abiertos),
+        }
+        productos.append(nuevo_producto)
+        try:
+            guardar_productos("alimentos.csv", productos)
+            st.success(f"Producto '{nombre}' agregado correctamente.")
+        except Exception as e:
+            st.error("Error guardando el producto en alimentos.csv")
+        
