@@ -121,8 +121,7 @@ df_editado = st.data_editor(
         "kg_por_bolsa": st.column_config.NumberColumn("Kg por bolsa", min_value=0.1),
         "bolsas_cerradas": st.column_config.NumberColumn("Bolsas cerradas", min_value=0, step=1),
         "kg_abiertos": st.column_config.NumberColumn("Kg abiertos", min_value=0.0, step=0.1),
-    }
-)
+    })
 if st.button("Guardar cambios"):
     productos_actualizados = df_editado.to_dict(orient="records")
     try:
