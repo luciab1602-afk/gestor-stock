@@ -110,4 +110,23 @@ with st.form("form_agregar_producto"):
             st.success(f"Producto '{nombre}' agregado correctamente.")
         except Exception as e:
             st.error("Error guardando el producto en alimentos.csv")
-        
+    st.title("📦 Gestor de Stock")
+
+df_editado = st.data_editor(
+    st.session_state.df,
+    use_container_width=True,
+    num_rows="fixed",
+    column_config={
+        "prodnombre": st.column_config.TextColumn("Producto"),
+        "kg_por_bolsa": st.column_config.NumberColumn("Kg por bolsa", min_value=0.1),
+        "bolsas_cerradas": st.column_config.NumberColumn("Bolsas cerradas", min_value=0, step=1),
+        "kg_abiertos": st.column_config.NumberColumn("Kg abiertos", min_value=0.0, step=0.1),
+    }
+)
+if st.button("Guardar cambios"):
+    productos_actualizados = df_editado.to_dict(orient="records")
+    try:
+        guardar_productos("alimentos.csv", productos_actualizados)
+        st.success("Cambios guardados correctamente.")
+    except Exception as e:
+        st.error("Error guardando los cambios en alimentos.csv")
